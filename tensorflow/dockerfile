@@ -1,0 +1,14 @@
+#Import rocm tensorflow base image
+FROM rocm/tensorflow:latest
+
+#set working dir
+WORKDIR /app
+COPY . /app
+
+#Python dependencies
+RUN apt-get update && apt-get install -y python3-pip && \
+    pip install --upgrade pip && \
+    pip install tensorflow numpy argparse
+
+#Run the training script
+CMD ["python3", "train.py"]
