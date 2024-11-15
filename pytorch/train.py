@@ -7,23 +7,24 @@ import sys
 from torch import nn, optim
 from torchvision.models import resnet50
 
+#Usage Instructions
 def parse_args():
     parser = argparse.ArgumentParser(description="Train ResNet-50 on CIFAR-10 using PyTorch and ROCm.")
     parser.add_argument("--log-file", type=str, default="training.log",
                         help="The file path where logs will be saved. Default: training.log")
     return parser.parse_args()
 
-# Logging configuration
+#Logging configuration
 def configure_logging(log_file):
     logging.basicConfig(
         filename=log_file,
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s'
     )
-    # Redirect stdout and stderr to the log file
     sys.stdout = open(log_file, "a")
     sys.stderr = sys.stdout
 
+#Training
 def train(model, train_loader, criterion, optimizer, device, epochs=10):
     model.train()
     logging.info("Starting training...")
@@ -67,19 +68,20 @@ def main():
 
     logging.info("Starting ResNet-50 training on CIFAR-10 with PyTorch and ROCm.")
 
-    # Check for GPU availability
+    #Check for GPU availability
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if device.type != "cuda":
         logging.error("No GPU devices found. Ensure ROCm is properly configured.")
         raise RuntimeError("No GPU devices found.")
     logging.info(f"Using device: {device}")
 
-    # Data preparation
+    #Data prep
     logging.info("Preparing CIFAR-10 dataset...")
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
         transforms.RandomCrop(32, padding=4),
         transforms.ToTensor(),
+        #from cifar10 precomputed values
         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
     ])
 
@@ -91,16 +93,16 @@ def main():
     test_dataset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    # Build the model
+    #Build the model
     logging.info("Building ResNet-50 model...")
     model = resnet50(pretrained=False, num_classes=10)
     model = model.to(device)
 
-    # Define loss function and optimizer
+    #Loss Function and Optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    # Train and test the model
+    #Train and test the model
     train(model, train_loader, criterion, optimizer, device, epochs=10)
     accuracy = test(model, test_loader, device)
 
