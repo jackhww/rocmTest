@@ -73,7 +73,8 @@ def main():
     if device.type != "cuda":
         logging.error("No GPU devices found. Ensure ROCm is properly configured.")
         raise RuntimeError("No GPU devices found.")
-    logging.info(f"Using device: {device}")
+    if torch.version.hip:
+        logging.info(f"Using device: {device}, {torch.version.hip}")
 
     #Data prep
     logging.info("Preparing CIFAR-10 dataset...")
