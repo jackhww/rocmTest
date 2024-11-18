@@ -1,6 +1,7 @@
 import torch
 import torchvision
 import torchvision.transforms as transforms
+import torch.nn as nn
 import logging
 import argparse
 import sys
@@ -50,6 +51,7 @@ def test(model, test_loader, device):
     correct = 0
     total = 0
     logging.info("Starting evaluation...")
+
     with torch.no_grad():
         for inputs, labels in test_loader:
             inputs, labels = inputs.to(device), labels.to(device)
@@ -61,6 +63,35 @@ def test(model, test_loader, device):
     accuracy = 100 * correct / total
     logging.info(f"Accuracy: {accuracy:.2f}%")
     return accuracy
+
+def exportonnx(model, device, output_path="resnet50.onnx"):
+    logging.info("Exporting model to ONNX format...")
+    
+    # Move model to the correct device
+    model = model.to(device)
+    model.eval()
+
+    # Ensure input tensor is on the same device
+    example_input = torch.randn(1, 3, 32, 32).to(device)
+
+    # Log device info for debugging
+    logging.info(f"Model device: {next(model.parameters()).device}")
+    logging.info(f"Example input device: {example_input.device}")
+
+    try:
+        torch.onnx.export(
+            model,
+            example_input,
+            output_path,
+            input_names=["input__0"],
+            output_names=["output__0"],
+            dynamic_axes={"input__0": {0: "batch_size"}, "output__0": {0: "batch_size"}},
+            opset_version=11,
+        )
+        logging.info(f"ONNX model exported successfully to {output_path}.")
+    except Exception as e:
+        logging.error(f"Error exporting model to ONNX: {e}")
+
 
 def main():
     args = parse_args()
@@ -106,6 +137,9 @@ def main():
     #Train and test the model
     train(model, train_loader, criterion, optimizer, device, epochs=10)
     accuracy = test(model, test_loader, device)
+
+    exportonnx(model, device)
+
 
     logging.info(f"Training and evaluation completed. Final accuracy: {accuracy:.2f}%")
 
