@@ -46,7 +46,7 @@ Log file currently contains the metrics for epochs, timestamps and training deta
 --device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --shm-size 8G rocmPytorch
 ```
 
-`cap-add=SYS_PTRACE`: for debugging, allows strace to attach to processes in the container
+`cap-add=SYS_PTRACE` - for debugging, allows strace to attach to processes in the container
 
 `security-opt seccomp=unconfined` - disables the seccomp security profile for unrestricted system calls
 
