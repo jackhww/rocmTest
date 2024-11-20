@@ -60,8 +60,7 @@ docker run --rm -it --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
 `shm-size 8G` - allocates 8GB of shared memory to the container
 
 
-##
- Pytorch (ROCm Fresh Install)
+## Pytorch (ROCm Fresh Install)
 ```wget https://repo.radeon.com/rocm/manylinux/rocm-rel-6.2.3/torch-2.3.0%2Brocm6.2.3-cp310-cp310-linux_x86_64.whl
 wget https://repo.radeon.com/rocm/manylinux/rocm-rel-6.2.3/torchvision-0.18.0%2Brocm6.2.3-cp310-cp310-linux_x86_64.whl
 wget https://repo.radeon.com/rocm/manylinux/rocm-rel-6.2.3/pytorch_triton_rocm-2.3.0%2Brocm6.2.3.5a02332983-cp310-cp310-linux_x86_64.whl
