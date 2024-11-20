@@ -67,14 +67,14 @@ def test(model, test_loader, device):
 def exportonnx(model, device, output_path="resnet50.onnx"):
     logging.info("Exporting model to ONNX format...")
     
-    # Move model to the correct device
+    #Move model to the correct device
     model = model.to(device)
     model.eval()
 
-    # Ensure input tensor is on the same device
+    #Ensure input tensor is on the same device
     example_input = torch.randn(1, 3, 32, 32).to(device)
 
-    # Log device info for debugging
+    #Log device info for debugging
     logging.info(f"Model device: {next(model.parameters()).device}")
     logging.info(f"Example input device: {example_input.device}")
 
@@ -138,7 +138,7 @@ def main():
     train(model, train_loader, criterion, optimizer, device, epochs=10)
     accuracy = test(model, test_loader, device)
 
-    exportonnx(model, device)
+    # exportonnx(model, device)
 
 
     logging.info(f"Training and evaluation completed. Final accuracy: {accuracy:.2f}%")

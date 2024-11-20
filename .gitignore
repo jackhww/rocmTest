@@ -1,2 +1,2 @@
-.gitattributes
-/rocmEnv
+/rocmEnv/
+/pytorch/data/

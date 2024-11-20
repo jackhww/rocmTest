@@ -1,0 +1,16 @@
+#using the rocm-pytorch image
+FROM rocm/pytorch:latest
+
+#set working dir
+WORKDIR /app
+
+#coopy the script, libs, and cifar dataset 
+COPY train.py /app/train.py
+COPY ./packages /app/packages
+COPY ./data /app/data
+
+#pip install argparse. pytorch libraries should be installed by default from the rocm/pytorch library.
+RUN pip install --no-index --find-links=/app/packages argparse
+
+#run the script
+CMD ["python3", "train.py", "--log-file", "training.log"]
